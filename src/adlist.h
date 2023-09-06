@@ -1,4 +1,5 @@
 /* adlist.h redis 双端链表的实现 */
+
 #ifndef __ADLIST_H__
 #define __ADLIST_H__
 
@@ -15,6 +16,7 @@ typedef struct listNode {
 /* 双端链表迭代器 */
 typedef struct listIter {
     listNode *next;
+    listNode *prev;
     int direction;
 } listIter;
 
@@ -69,19 +71,19 @@ list *listCreate(void);
 void listRelease(list *list);
 list *listAddNodeHead(list *list, void *value);
 list *listAddNodeTail(list *list, void *value);
-list *listInsertNode(list *list, listNode *old_node, void *value, int after);
+// list *listInsertNode(list *list, listNode *old_node, void *value, int after);
 void listDelNode(list *list, listNode *node);
 listIter *listGetIterator(list *list, int direction);
-listNode *listNext(listIter *iter);
+listNode *listNextElement(listIter *iter);
 void listReleaseIterator(listIter *iter);
 list *listDup(list *orig);
 listNode *listSearchKey(list *list, void *key);
-listNode *listIndex(list *list, long index);
-void listRewind(list *list, listIter *iter);
-void listRewindTail(list *list, listIter *li);
-void listRotate(list *list);
+listNode *listIndex(list *list, int index);
+// void listRewind(list *list, listIter *iter);
+// void listRewindTail(list *list, listIter *li);
+// void listRotate(list *list);
 
 #define AL_START_HEAD   0
-#define AL_START_END    1
+#define AL_START_TAIL   1
 
 #endif  
