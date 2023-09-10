@@ -14,7 +14,7 @@ static void sdsOomAbort(void) {
 sds sdsnewlen(const void *init, size_t initlen)
 {
     struct sdshdr *sh;
-    sh = zmalloc(sizeof(struct sdshdr)+initlen);
+    sh = zmalloc(sizeof(struct sdshdr)+initlen+1);
     if (sh == NULL) sdsOomAbort();
     sh->len = initlen;
     sh->free = 0;

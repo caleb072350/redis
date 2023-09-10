@@ -665,7 +665,7 @@ static void initServer() {
     createSharedObjects();
     server.el = aeCreateEventLoop();
     server.dict = zmalloc(sizeof(dict*)*server.dbnum);
-    if (!server.dict || !server.clients || server.slaves || !server.el || !server.objfreelist)
+    if (!server.dict || !server.clients || !server.slaves || !server.el || !server.objfreelist)
         oom("server initialization");
     server.fd = anetTcpServer(server.neterr, server.port, server.bindaddr);
     if (server.fd == -1) {
