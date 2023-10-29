@@ -752,6 +752,14 @@ static void loadServerConfig(char *filename) {
                 redisLog(REDIS_WARNING, "Can't chdir to '%s': %s", argv[1], strerror(errno));
                 exit(1);
             }
+        } else if (!strcmp(argv[0], "loglevel") && argc == 2) {
+            if (!strcmp(argv[1],"debug")) server.verbosity = REDIS_DEBUG;
+            else if (!strcmp(argv[1],"notice")) server.verbosity = REDIS_NOTICE;
+            else if (!strcmp(argv[1],"warning")) server.verbosity = REDIS_WARNING;
+            else {
+                err = "Invalid log level. Must be one of debug, notice, warning";
+                goto loaderr;
+            }
         } else if (!strcmp(argv[0],"logfile") && argc == 2) {
             FILE *fp;
 
@@ -812,10 +820,6 @@ loaderr:
     fprintf(stderr, "%s\n", err);
     exit(1);
 }
-
-
-
-
 
 
 
@@ -1754,7 +1758,7 @@ int main(int argc, char **argv) {
     }
     if (aeCreateFileEvent(server.el, server.fd, AE_READABLE, 
             acceptHandler, NULL, NULL) == AE_ERR) oom("creating file event");
-    redisLog(REDIS_NOTICE, "'The server is now ready to accept connections");
+    redisLog(REDIS_NOTICE, "The server is now ready to accept connections");
     aeMain(server.el);
     aeDeleteEventLoop(server.el);
     return 0;

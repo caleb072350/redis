@@ -5,10 +5,12 @@ CFLAGS?= -O0 -Wall -W
 CCOPT= $(CFLAGS)
 
 OBJ = adlist.o ae.o anet.o dict.o redis.o sds.o zmalloc.o
+CLIOBJ = anet.o sds.o adlist.o redis-cli.o zmalloc.o 
 
 PRGNAME = redis-server
+CLIPRGNAME = redis-cli 
 
-all: redis-server
+all: redis-server redis-cli
 
 # Deps (use make dep to generate this)
 adlist.o: adlist.c adlist.h zmalloc.h
@@ -23,6 +25,8 @@ redis-server: $(OBJ)
 	$(CC) $(DEBUG) -o $(PRGNAME) $(CCOPT)  $(OBJ)
 	@echo "this is a test msg"
 
+redis-cli: $(CLIOBJ)
+	$(CC) $(DEBUG) -o $(CLIPRGNAME) $(CCOPT) $(CLIOBJ)
 
 dep:
 	$(CC) -MM *.c
@@ -36,4 +40,6 @@ test:
 
 clean:
 	rm *.o 
+	rm redis-cli 
+	rm redis-server
 

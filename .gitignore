@@ -1,6 +1,7 @@
 *.gcda
 *.gcno
 *.gcov
+*.log
 redis.info
 lcov-html
 .DS_Store

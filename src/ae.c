@@ -169,6 +169,9 @@ int aeProcessEvents(aeEventLoop *eventLoop, int flags)
         }
     }
 
+    /* Search the first timer to fire. This operation is useful to know how 
+     * many time the select can be put in sleep without to delay any event.
+     * If there are no timers NULL is returned. */
     if (numfd || (flags & AE_TIME_EVENTS) && !(flags & AE_DONT_WAIT)) {
         int retval;
         aeTimeEvent *shortest = NULL;
@@ -183,10 +186,14 @@ int aeProcessEvents(aeEventLoop *eventLoop, int flags)
             tvp->tv_sec = shortest->when_sec - now_sec;
             if (shortest->when_ms < now_ms) {
                 tvp->tv_usec = ((shortest->when_ms+1000) - now_ms)*1000;
+                tvp->tv_sec--;
             } else {
                 tvp->tv_usec = (shortest->when_ms - now_ms)*1000;
             }
         } else {
+            /* If we have to check for events but need to return
+             * ASAP because of AE_DONT_WAIT we need to set the timeout
+             * to zero. */
             if (flags & AE_DONT_WAIT) {
                 tv.tv_sec = tv.tv_usec = 0;
                 tvp = &tv;
@@ -291,6 +298,8 @@ void aeMain(aeEventLoop *eventLoop)
 {
     eventLoop->stop = 0;
     while (!eventLoop->stop) {
-        aeProcessEvents(eventLoop, AE_ALL_EVENTS);
+        // for test 
+        //aeProcessEvents(eventLoop, AE_ALL_EVENTS);
+        aeProcessEvents(eventLoop, AE_FILE_EVENTS);
     }
 }
